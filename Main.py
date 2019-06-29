@@ -18,10 +18,8 @@ totLot = 0
 alcoDict = {}
 
 def setLot(usrIp):
-    print('s'+usrIp)
     global totLot
     totLot =  int(usrIp.split(' ')[1])
-    print(totLot)
     global avalLot
     avalLot = [(i+1) for i in range(totalLot)]
     return 'Created a parking lot with {0} slots'.format(totalLot)
@@ -37,8 +35,19 @@ def carPark(usrIp):
         parkingLot = ParkingLot(arr[1],arr[2],i)
         alcoDict[i] = parkingLot
         avalLot.remove(i)
-        print(alcoDict)
         msg = 'Allocated slot number:{0}'.format(i)
+    return msg
+
+def carLeave(usrIp):
+    msg = 'Slot number is Invalid'
+    i = 0
+    arr = usrIp.split(' ')
+    key = int(arr[1])
+    if key in alcoDict:
+        del alcoDict[key]
+        avalLot.append(key)
+        msg = 'Slot number {0} is free'.format(key)
+        
     return msg
 
 def interact(usrIp):
@@ -63,5 +72,4 @@ if __name__== "__main__":
     if len(sys.argv) > 1:
         print(sys.argv[1])
     else :
-        print("No")
         interact('')
