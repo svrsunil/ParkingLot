@@ -9,9 +9,9 @@ import sys
 class ParkingLot:
     
     def __init__(self, registration_number, cars_with_colour,slot_number):
-        self.registration_number = registration_number
+        self.registration_numbers = registration_number
         self.cars_with_colour = cars_with_colour
-        self.slot_number = slot_number
+        self.slot_numbers = slot_number
         
 avalLot = []
 totLot = 0
@@ -41,11 +41,9 @@ def carPark(usrIp):
     return msg
 
 def carLeave(usrIp):
-    print(usrIp)
     msg = 'Slot number is Invalid'
     i = 0
     arr = usrIp.split(' ')
-    print(arr)
     key = int(arr[1])
     if key in alcoDict:
         del alcoDict[key]
@@ -58,19 +56,35 @@ def carInquiry(usrIp):
     
     qtns,ans = usrIp.split(' ')
     qtn = qtns.split('_for_')
-    print(qtn)
+    
     result = ''
     for key in sorted(alcoDict):
-        result = result + ', ' + str(getattr(alcoDict[key], qtn[0]))
+        parkingLot = alcoDict[key]
         
-    return result[2:]
-    
+        try:
+            getattr(parkingLot, qtn[1])
+        except AttributeError:
+           qtn[1] = qtn[1]+'s'
+
+        try:
+            getattr(parkingLot, qtn[0])
+        except AttributeError:
+           qtn[0] = qtn[0]+'s'
+        
+        if(str(getattr(parkingLot, qtn[1]) )== ans):
+            result = result + ', ' + str(getattr(parkingLot, qtn[0]))
+    if(len(result) > 0) :
+           result = result[2:] 
+
+    return result
+
+
 def status():
     result = 'Slot No.    Registration No    Colour'
      
     for key in sorted(alcoDict):
         parkingLot = alcoDict[key]
-        result = result + '\n'+str(key)+'           '+parkingLot.registration_number+'      '+parkingLot.cars_with_colour
+        result = result + '\n'+str(key)+'           '+parkingLot.registration_numbers+'      '+parkingLot.cars_with_colour
     
     return result
  
@@ -101,5 +115,4 @@ if __name__== "__main__":
     if len(sys.argv) > 1:
         print(sys.argv[1])
     else :
-        print("No")
         interact('')
