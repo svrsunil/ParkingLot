@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Jun 29 16:54:16 2019
 
-@author: svrsunil
-"""
 import sys,os
 
 class ParkingLot:
