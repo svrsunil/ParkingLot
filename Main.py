@@ -4,7 +4,7 @@ Created on Sat Jun 29 16:54:16 2019
 
 @author: svrsunil
 """
-import sys
+import sys,os
 
 class ParkingLot:
     
@@ -14,14 +14,14 @@ class ParkingLot:
         self.slot_numbers = slot_number
         
 avalLot = []
-totLot = 0
+totalLot = 0
 alcoDict = {}
 
 def setLot(usrIp):
-    global totLot
-    if(totLot > 0) :
+    global totalLot
+    if(totalLot > 0) :
         return 'Slot already set'
-    totLot =  int(usrIp.split(' ')[1])
+    totalLot =  int(usrIp.split(' ')[1])
     global avalLot
     avalLot = [(i+1) for i in range(totalLot)]
     return 'Created a parking lot with {0} slots'.format(totalLot)
@@ -73,27 +73,35 @@ def carInquiry(usrIp):
         
         if(str(getattr(parkingLot, qtn[1]) )== ans):
             result = result + ', ' + str(getattr(parkingLot, qtn[0]))
+    
     if(len(result) > 0) :
            result = result[2:] 
-
+    else:
+        result = 'Not found'
     return result
 
 
 def status():
     result = 'Slot No.    Registration No    Colour'
-     
+    
+    if len(alcoDict) == 0:
+        return 'No Cars'
     for key in sorted(alcoDict):
         parkingLot = alcoDict[key]
-        result = result + '\n'+str(key)+'           '+parkingLot.registration_numbers+'      '+parkingLot.cars_with_colour
+        result += '\n'+str(key)+'           '+parkingLot.registration_numbers+'      '+parkingLot.cars_with_colour
     
     return result
  
 def interact(usrIp):
     usrIp = input(usrIp)
+    print(switch(usrIp))
+    interact('')
     
+    
+def switch(usrIp):
     rsp = ''
+    
     if('create_parking_lot' in usrIp):
-        
         rsp= setLot(usrIp)
     elif('park' in usrIp) :
         rsp= carPark(usrIp)
@@ -107,12 +115,18 @@ def interact(usrIp):
         sys.exit(0)
     else :
         rsp = 'Invalid Arugment'
-    print(rsp)
-    interact('')
+    
+    return rsp
 
 if __name__== "__main__":
     
     if len(sys.argv) > 1:
         print(sys.argv[1])
+        if os.path.exists(sys.argv[1]) :
+            f = open(sys.argv[1], "r")
+            for x in f:
+                print(switch(x))
+        else:
+            print('Invalid File')
     else :
         interact('')
