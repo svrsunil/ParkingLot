@@ -13,6 +13,13 @@ avalLot = []
 totalLot = 0
 alcoDict = {}
 
+'''
+This method will be called from switch if user request for create slot. 
+It will add that slot no in avalLot List
+@param : usrIp
+@return : response String to display
+'''
+
 def setLot(usrIp):
     global totalLot
     if(totalLot > 0) :
@@ -22,6 +29,12 @@ def setLot(usrIp):
     avalLot = [(i+1) for i in range(totalLot)]
     return 'Created a parking lot with {0} slots'.format(totalLot)
 
+'''
+This method will be called from switch if user request for Parking. 
+It will ADD the ParkingLot object from avalLot DICTIONARY and remove that slot no in avalLot List
+@param : usrIp
+@return : response String to display
+'''
 def carPark(usrIp):
     
     msg = 'Sorry, parking lot is full'
@@ -36,6 +49,13 @@ def carPark(usrIp):
         msg = 'Allocated slot number:{0}'.format(i)
     return msg
 
+'''
+This method will be called from switch if user request for car leaving. 
+It will remove the ParkingLot object from avalLot DICTIONARY and add that slot no in avalLot List
+@param : usrIp
+@return : response String to display
+'''
+
 def carLeave(usrIp):
     msg = 'Slot number is Invalid'
     i = 0
@@ -47,6 +67,12 @@ def carLeave(usrIp):
         msg = 'Slot number {0} is free'.format(key)
         
     return msg
+
+'''
+This method will be called from switch if user request for car Inquires
+@param : usrIp
+@return : response String to display
+'''
 
 def carInquiry(usrIp):
     
@@ -67,7 +93,7 @@ def carInquiry(usrIp):
         except AttributeError:
            qtn[0] = qtn[0]+'s'
         
-        if(str(getattr(parkingLot, qtn[1]) )== ans):
+        if(str(getattr(parkingLot, qtn[1])) in ans):
             result = result + ', ' + str(getattr(parkingLot, qtn[0]))
     
     if(len(result) > 0) :
@@ -76,6 +102,11 @@ def carInquiry(usrIp):
         result = 'Not found'
     return result
 
+'''
+This method will be called from switch if user request for status
+@param : usrIp
+@return : response String to display
+'''
 
 def status():
     result = 'Slot No.    Registration No    Colour'
@@ -87,13 +118,25 @@ def status():
         result += '\n'+str(key)+'           '+parkingLot.registration_numbers+'      '+parkingLot.cars_with_colour
     
     return result
- 
+
+'''
+This method will interactive to user and call switch method for repsonse
+@param : usrIp
+@return : response String to display
+
+'''
 def interact(usrIp):
     usrIp = input(usrIp)
     print(switch(usrIp))
     interact('')
     
-    
+'''
+This method will understand user request and routie to the responding method
+@param : usrIp
+@return : response String to display
+
+'''
+
 def switch(usrIp):
     rsp = ''
     
@@ -114,14 +157,19 @@ def switch(usrIp):
     
     return rsp
 
+'''
+This the main program called from script , it take argument as filename optional
+If argument is empty it will invoke interactive method
+@param : sys.argv[1] as filename
+'''
 if __name__== "__main__":
     
     if len(sys.argv) > 1:
-        print(sys.argv[1])
+        #print(sys.argv[1])
         if os.path.exists(sys.argv[1]) :
             f = open(sys.argv[1], "r")
             for x in f:
-                print(switch(x))
+                print(switch(x).replace('\n\n','\n').strip())
         else:
             print('Invalid File')
     else :
